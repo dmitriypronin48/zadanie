@@ -39,38 +39,38 @@
 #    enabled: yes
 #  tags:
 #    - openvpn-service
-
-- name: Установка репозитория PostgreSQL 12
-  ansible.builtin.yum:
-    name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-    state: present
-  tags:
-    - postgresql-repo
-
-- name: Установка PostgreSQL 12 сервера и компонентов
-  ansible.builtin.yum:
-    name:
-      - postgresql12-server
-      - postgresql12-contrib
-    state: present
-    enablerepo: pgdg12
-  tags:
-    - postgresql-install
-
-- name: Инициализация БД PostgreSQL 12
-  ansible.builtin.command: /usr/pgsql-12/bin/postgresql-12-setup initdb
-  args:
-    creates: /var/lib/pgsql/12/data/PG_VERSION
-  tags:
-    - postgresql-init
-
-- name: Запуск и включение автозагрузки PostgreSQL 12
-  ansible.builtin.systemd:
-    name: postgresql-12
-    state: started
-    enabled: yes
-  tags:
-    - postgresql-service
+#
+#- name: Установка репозитория PostgreSQL 12
+#  ansible.builtin.yum:
+#    name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+#    state: present
+#  tags:
+#    - postgresql-repo
+#
+#- name: Установка PostgreSQL 12 сервера и компонентов
+#  ansible.builtin.yum:
+#    name:
+#      - postgresql12-server
+#      - postgresql12-contrib
+#    state: present
+#    enablerepo: pgdg12
+#  tags:
+#    - postgresql-install
+#
+#- name: Инициализация БД PostgreSQL 12
+#  ansible.builtin.command: /usr/pgsql-12/bin/postgresql-12-setup initdb
+#  args:
+#    creates: /var/lib/pgsql/12/data/PG_VERSION
+#  tags:
+#    - postgresql-init
+#
+#- name: Запуск и включение автозагрузки PostgreSQL 12
+#  ansible.builtin.systemd:
+#    name: postgresql-12
+#    state: started
+#    enabled: yes
+#  tags:
+#    - postgresql-service
 
 - name: Установка Java (обязательное требование)
   ansible.builtin.yum:
