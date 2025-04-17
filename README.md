@@ -197,6 +197,7 @@ sysctl -p
 iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
 
 # На сервере клиенте делаем настройку
+# конфиги уже готовые разложены по папкам, ансиблом полностью настраивается тачка, для убунты свой конфиг
 nano /etc/openvpn/client/client1.conf
 ```
 client
@@ -293,7 +294,13 @@ iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
 tail -f /var/log/openvpn-status.log
 
 
+# Проверка работы елк
+ЕЛК будет выключен, так как надо на тачку много ресурсов.
+Когда ресурсы будут, врубить через сервисы стек елк и проверить работу
 
+curl -X GET "localhost:9200"
+systemctl status elasticsearch
+systemctl status kibana
 
 
 
