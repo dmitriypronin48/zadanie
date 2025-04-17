@@ -1,37 +1,37 @@
-#- name: Установка epel-release
-#  ansible.builtin.yum:
-#    name: epel-release #название пакета
-#    state: present     #согласие на установку
-#  tags:
-#    - epel
-#
-#- name: Установка openvpn
-#  ansible.builtin.yum:
-#    name: openvpn      #название пакета
-#    state: present     #согласие на установку
-#  tags:
-#    - openvpn
-#
-#- name: Создание директории для конфигов клиента
-#  ansible.builtin.file:
-#    path: /etc/openvpn/client/
-#    state: directory
-#    mode: '0750'
-#    owner: root
-#    group: root
-#  tags:
-#    - openvpn-config
-#
-#- name: Копирование конфигурации client.ovpn
-#  ansible.builtin.copy:
-#    src: /opt/ansible/roles/install_centos/tasks/client1.conf  # В конфиге обязательно поменять IP сервера vpn, и указывать верный путь откуда забрать конфиг локально
-#    dest: /etc/openvpn/client/client1.conf                     # Копируем в удаленную машину
-#    mode: '0600'
-#    owner: root
-#    group: root
-#  tags:
-#    - openvpn-config
-#
+- name: Установка epel-release для vpn
+  ansible.builtin.yum:
+    name: epel-release #название пакета
+    state: present     #согласие на установку
+  tags:
+    - epel
+
+- name: Установка openvpn
+  ansible.builtin.yum:
+    name: openvpn      #название пакета
+    state: present     #согласие на установку
+  tags:
+    - openvpn
+
+- name: Создание директории для конфигов клиента
+  ansible.builtin.file:
+    path: /etc/openvpn/client/
+    state: directory
+    mode: '0750'
+    owner: root
+    group: root
+  tags:
+    - openvpn-config
+
+- name: Копирование конфигурации client.ovpn
+  ansible.builtin.copy:
+    src: /opt/ansible/roles/install_centos/tasks/client1.conf  # В конфиге обязательно поменять IP сервера vpn, и указывать верный путь откуда забрать конфиг локально
+    dest: /etc/openvpn/client/client1.conf                     # Копируем в удаленную машину
+    mode: '0600'
+    owner: root
+    group: root
+  tags:
+    - openvpn-config
+
 #- name: Активация и запуск сервиса OpenVPN
 #  ansible.builtin.systemd:
 #    name: openvpn-client@client1
@@ -39,38 +39,38 @@
 #    enabled: yes
 #  tags:
 #    - openvpn-service
-#
-#- name: Установка репозитория PostgreSQL 12
-#  ansible.builtin.yum:
-#    name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-#    state: present
-#  tags:
-#    - postgresql-repo
-#
-#- name: Установка PostgreSQL 12 сервера и компонентов
-#  ansible.builtin.yum:
-#    name:
-#      - postgresql12-server
-#      - postgresql12-contrib
-#    state: present
-#    enablerepo: pgdg12
-#  tags:
-#    - postgresql-install
-#
-#- name: Инициализация БД PostgreSQL 12
-#  ansible.builtin.command: /usr/pgsql-12/bin/postgresql-12-setup initdb
-#  args:
-#    creates: /var/lib/pgsql/12/data/PG_VERSION
-#  tags:
-#    - postgresql-init
-#
-#- name: Запуск и включение автозагрузки PostgreSQL 12
-#  ansible.builtin.systemd:
-#    name: postgresql-12
-#    state: started
-#    enabled: yes
-#  tags:
-#    - postgresql-service
+
+- name: Установка репозитория PostgreSQL 12
+  ansible.builtin.yum:
+    name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+    state: present
+  tags:
+    - postgresql-repo
+
+- name: Установка PostgreSQL 12 сервера и компонентов
+  ansible.builtin.yum:
+    name:
+      - postgresql12-server
+      - postgresql12-contrib
+    state: present
+    enablerepo: pgdg12
+  tags:
+    - postgresql-install
+
+- name: Инициализация БД PostgreSQL 12
+  ansible.builtin.command: /usr/pgsql-12/bin/postgresql-12-setup initdb
+  args:
+    creates: /var/lib/pgsql/12/data/PG_VERSION
+  tags:
+    - postgresql-init
+
+- name: Запуск и включение автозагрузки PostgreSQL 12
+  ansible.builtin.systemd:
+    name: postgresql-12
+    state: started
+    enabled: yes
+  tags:
+    - postgresql-service
 
 - name: Установка Java (обязательное требование)
   ansible.builtin.yum:
@@ -117,17 +117,18 @@
   tags:
     - elk-install
 
-- name: Запуск и включение сервисов ELK
-  ansible.builtin.systemd:
-    name: "{{ item }}"
-    state: started
-    enabled: yes
-  loop:
-    - elasticsearch
-    - kibana
-    - logstash
-  tags:
-    - elk-service
+# Прокатывать только при наличии достаточного количества ресурсов, либо залипнет тачка
+#- name: Запуск и включение сервисов ELK
+#  ansible.builtin.systemd:
+#    name: "{{ item }}"
+#    state: started
+#    enabled: yes
+#  loop:
+#    - elasticsearch
+#    - kibana
+#    - logstash
+#  tags:
+#    - elk-service
 
 - name: Очистка временных файлов
   ansible.builtin.file:
