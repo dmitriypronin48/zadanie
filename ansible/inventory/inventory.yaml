@@ -1,0 +1,7 @@
+centos:
+  hosts:
+    centos-test.ru-central1.internal:
+      ansible_host: 158.160.139.86 #ip тачки
+#      ansible_host: 10.8.0.2 #ip vpn клиента
+      ansible_user: dmitriy #юзер с тачки
+      ansible_become: true
